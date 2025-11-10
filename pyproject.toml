@@ -1,0 +1,9 @@
+[project]
+name = "fixitydb-prorotype"
+version = "1.0.0-dev"
+dependencies = [
+    "jwcrypto",
+    "rdflib",
+    "requests",
+    "requests-jwtauth",
+]

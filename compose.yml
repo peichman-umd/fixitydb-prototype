@@ -1,0 +1,26 @@
+version: "3.8"
+services:
+  db:
+    image: postgres:18
+    volumes:
+      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    ports:
+      - "5439:5432"
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: fixity
+
+  postgrest:
+    image: postgrest/postgrest
+    ports:
+      - "3333:3000"
+    depends_on:
+      - db
+    env_file:
+      - .env
+    environment:
+      - PGRST_DB_URI=postgres://authenticator:foobar@db/fixity
+      - PGRST_DB_SCHEMAS=public
+      - PGRST_DB_ANON_ROLE=web_anon
+
+# schema cache reload: docker-compose kill -s SIGUSR1 <service>
