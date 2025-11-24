@@ -37,9 +37,9 @@ Start up the Docker compose:
 docker compose up -d
 ```
 
-REST API endpoints
+### REST API endpoints
 
-(defined in [02-roles.sql](docker-entrypoint-initdb.d/01-tables.sql)):
+(defined in [01-tables.sql](docker-entrypoint-initdb.d/01-tables.sql)):
 
 * List of all binaries: <http://localhost:3333/binaries>
 * List of all fixity checks: <http://localhost:3333/checks>
