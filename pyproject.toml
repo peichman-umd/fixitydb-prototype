@@ -2,6 +2,7 @@
 name = "fixitydb-prototype"
 version = "1.0.0-dev"
 dependencies = [
+    "click",
     "jwcrypto",
     "plastron-models",
     "plastron-repo",
@@ -10,3 +11,6 @@ dependencies = [
     "requests",
     "requests-jwtauth",
 ]
+
+[project.scripts]
+check = "postgrest.check:check"

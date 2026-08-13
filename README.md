@@ -55,5 +55,5 @@ python load_uris.py qa-uris.csv
 Run a fixity check of the 100 least recently checked resources:
 
 ```zsh
-python check_least_recent.py 100
+python check --least_recent -n 100
 ```

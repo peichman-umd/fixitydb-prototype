@@ -55,6 +55,7 @@ class FixityRecords:
             yield row['uri']
 
     def check_least_recent(self, batch_size: int = 250) -> Iterator[dict[str, str | int]]:
+        logger.info(f'Checking {batch_size} least recently checked binaries')
         for uri in self.get_least_recent(batch_size=batch_size):
             yield self.check(uri)
 
