@@ -13,4 +13,5 @@ dependencies = [
 ]
 
 [project.scripts]
-check = "postgrest.check:check"
+check = "postgrest.cli:check"
+load_uris = "postgrest.cli:load_uris"

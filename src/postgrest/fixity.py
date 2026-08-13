@@ -1,5 +1,7 @@
+import json
 import logging
 from collections.abc import Iterable, Iterator, Mapping
+from typing import Any
 
 from plastron.files import BinaryResource
 from plastron.models.fedora import FedoraBinary
@@ -29,24 +31,24 @@ class FixityRecords:
             repo=Repository.from_url(repo_endpoint, auth=HTTPBearerAuth(repo_auth_token)),
         )
 
-    def add_uri(self, uri: str):
+    def get_binary_info(self, uri: str) -> dict[str, str | int]:
         resource = self.repo.read(uri, BinaryResource)
         obj = resource.describe(FedoraBinary)
-        self.pgrst.insert(
-            path='binaries',
-            record={
-                'uri': uri,
-                'last_modified': str(obj.last_modified),
-                'size': int(str(obj.size)),
-                'digest': str(obj.digest),
-            },
-        )
+        return {
+            'uri': uri,
+            'last_modified': str(obj.last_modified),
+            'size': int(str(obj.size)),
+            'digest': str(obj.digest),
+        }
 
-    def bulk_add_uris(self, data: Iterable, media_type: str = 'text/csv'):
+    def add_uri(self, uri: str):
+        self.pgrst.insert(path='binaries', record=self.get_binary_info(uri))
+
+    def bulk_add_uris(self, uris: Iterable[str]):
         self.pgrst.bulk_insert(
             path='binaries',
-            data=data,
-            media_type=media_type,
+            data=json.dumps([self.get_binary_info(uri.rstrip()) for uri in uris]),
+            media_type='application/json',
         )
 
     def get_least_recent(self, batch_size: int = 250) -> Iterator[str]:

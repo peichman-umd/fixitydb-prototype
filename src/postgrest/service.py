@@ -2,7 +2,7 @@ import logging
 from collections.abc import Iterable
 from typing import Any
 
-from requests import Session
+from requests import Session, Response
 from requests.auth import AuthBase
 
 logger = logging.getLogger(__name__)
@@ -14,7 +14,7 @@ class PostgrestService:
         self.session = Session()
         self.session.auth = auth
 
-    def get(self, path: str, **kwargs):
+    def get(self, path: str, **kwargs) -> Response:
         return self.session.get(f'{self.endpoint}/{path}', **kwargs)
 
     def post(self, path: str, **kwargs):

@@ -25,3 +25,11 @@ def check(uri, least_recent, number):
         records.record_result(records.check(uri))
     else:
         pass
+
+
+@click.command()
+@click.option('-f', '--file', type=click.File('r'))
+@click.argument('uris', nargs=-1)
+def load_uris(file, uris):
+    records = FixityRecords.from_config(os.environ)
+    records.bulk_add_uris(file or uris)

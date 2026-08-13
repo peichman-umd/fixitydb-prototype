@@ -46,10 +46,10 @@ docker compose up -d
 * Least recently checked resources: <http://localhost:3333/least_recent>
 * Stats about the checks: <http://localhost:3333/stats>
 
-Load 1000 fcrepo-qa URIs and last modified dates:
+Load 1000 fcrepo-qa URIs:
 
 ```zsh
-python load_uris.py qa-uris.csv
+python load_uris --file qa-uris.txt
 ```
 
 Run a fixity check of the 100 least recently checked resources:
