@@ -42,7 +42,7 @@ docker compose up -d
 (defined in [01-tables.sql](docker-entrypoint-initdb.d/01-tables.sql)):
 
 * List of all binaries: <http://localhost:3333/binaries>
-* List of all fixity checks: <http://localhost:3333/checks>
+* List of all fixity check results: <http://localhost:3333/results>
 * Least recently checked resources: <http://localhost:3333/least_recent>
 * Stats about the checks: <http://localhost:3333/stats>
 
