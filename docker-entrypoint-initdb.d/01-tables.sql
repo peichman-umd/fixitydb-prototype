@@ -39,3 +39,6 @@ CREATE VIEW stats AS
     (SELECT COUNT(*) FROM results WHERE uri = binary_uri AND outcome != 'SUCCESS') AS failures
   FROM binaries
   ORDER BY total_checks DESC, uri;
+
+-- view of failed fixity checks, most recent first
+CREATE VIEW failures AS SELECT * FROM results WHERE outcome != 'SUCCESS' ORDER BY time DESC, uri;
