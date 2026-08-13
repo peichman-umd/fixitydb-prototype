@@ -1,9 +1,10 @@
 import logging
-from collections.abc import Iterable, Iterator
+from collections.abc import Iterable, Iterator, Mapping
 
 from plastron.files import BinaryResource
 from plastron.models.fedora import FedoraBinary
 from plastron.repo import Repository
+from requests_jwtauth import HTTPBearerAuth
 
 from postgrest.service import PostgrestService
 
@@ -14,6 +15,19 @@ class FixityRecords:
     def __init__(self, pgrst: PostgrestService, repo: Repository):
         self.pgrst = pgrst
         self.repo = repo
+
+    @classmethod
+    def from_config(cls, config: Mapping[str, str]):
+        pgrst_endpoint = config['FIXITYDB_ENDPOINT']
+        pgrst_auth_token = config['FIXITYDB_TOKEN']
+
+        repo_endpoint = config['FCREPO_ENDPOINT']
+        repo_auth_token = config['FCREPO_TOKEN']
+
+        return cls(
+            pgrst=PostgrestService(pgrst_endpoint, HTTPBearerAuth(pgrst_auth_token)),
+            repo=Repository.from_url(repo_endpoint, auth=HTTPBearerAuth(repo_auth_token)),
+        )
 
     def add_uri(self, uri: str):
         resource = self.repo.read(uri, BinaryResource)
