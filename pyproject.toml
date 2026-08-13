@@ -1,8 +1,11 @@
 [project]
-name = "fixitydb-prorotype"
+name = "fixitydb-prototype"
 version = "1.0.0-dev"
 dependencies = [
     "jwcrypto",
+    "plastron-models",
+    "plastron-repo",
+    "python-dotenv",
     "rdflib",
     "requests",
     "requests-jwtauth",
