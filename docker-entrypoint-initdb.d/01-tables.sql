@@ -7,7 +7,7 @@ CREATE TABLE binaries (
 
 CREATE TABLE results (
   id serial primary key,
-  binary_uri varchar references binaries(uri),
+  uri varchar references binaries(uri),
   outcome varchar,
   time timestamp with time zone,
   size integer,
@@ -26,19 +26,24 @@ CREATE TABLE results (
 -- include uri in the "ORDER BY" clause to guarantee a stable ordering if two binaries have the same
 -- last modified and last checked timestamps
 CREATE VIEW least_recent (uri, last_modified, latest_check_time) AS
-  SELECT uri, last_modified, (SELECT time FROM results WHERE binary_uri = uri ORDER BY time DESC LIMIT 1)
-  FROM binaries ORDER BY time ASC NULLS FIRST, last_modified ASC, uri;
+  SELECT b.uri, last_modified, (SELECT time FROM results AS r WHERE r.uri = b.uri ORDER BY time DESC LIMIT 1)
+  FROM binaries AS b
+  ORDER BY time ASC NULLS FIRST, last_modified ASC, uri;
 
 -- view of statistics for each URI
 CREATE VIEW stats AS
   SELECT
     uri,
-    (SELECT time FROM results WHERE binary_uri = uri ORDER BY time DESC LIMIT 1) AS latest_check_time,
-    (SELECT COUNT(*) FROM results WHERE uri = binary_uri) AS total_checks,
-    (SELECT COUNT(*) FROM results WHERE uri = binary_uri AND outcome = 'SUCCESS') AS successes,
-    (SELECT COUNT(*) FROM results WHERE uri = binary_uri AND outcome != 'SUCCESS') AS failures
-  FROM binaries
+    (SELECT time FROM results AS r WHERE r.uri = b.uri ORDER BY time DESC LIMIT 1) AS latest_check_time,
+    (SELECT COUNT(*) FROM results AS r WHERE r.uri = b.uri) AS total_checks,
+    (SELECT COUNT(*) FROM results AS r WHERE r.uri = b.uri AND outcome = 'SUCCESS') AS successes,
+    (SELECT COUNT(*) FROM results AS r WHERE r.uri = b.uri AND outcome != 'SUCCESS') AS failures
+  FROM binaries AS b
   ORDER BY total_checks DESC, uri;
 
 -- view of failed fixity checks, most recent first
-CREATE VIEW failures AS SELECT * FROM results WHERE outcome != 'SUCCESS' ORDER BY time DESC, uri;
+CREATE VIEW failures AS
+  SELECT *
+  FROM results
+  WHERE outcome != 'SUCCESS'
+  ORDER BY time DESC, uri;

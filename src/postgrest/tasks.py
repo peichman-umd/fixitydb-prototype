@@ -46,9 +46,9 @@ def check_fixity(uri: str):
 def record_result(result: dict[str, str | int]):
     fixity_success = result['outcome'] == 'SUCCESS'
     logger.debug(json.dumps(result, indent=None))
-    logger.info(f'Recording fixity check for {result["binary_uri"]}: {result["outcome"]}')
+    logger.info(f'Recording fixity check for {result["uri"]}: {result["outcome"]}')
     records.record_result(result)
     if not fixity_success:
-        logger.warning(f'Fixity check FAILED for {result["binary_uri"]}')
+        logger.warning(f'Fixity check FAILED for {result["uri"]}')
         logger.warning('TODO: notify DPI')
     return result

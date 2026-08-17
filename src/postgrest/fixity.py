@@ -1,7 +1,6 @@
 import json
 import logging
 from collections.abc import Iterable, Iterator, Mapping
-from typing import Any
 
 from plastron.files import BinaryResource
 from plastron.models.fedora import FedoraBinary
@@ -41,8 +40,10 @@ class FixityRecords:
             'digest': str(obj.digest),
         }
 
-    def add_uri(self, uri: str):
-        self.pgrst.insert(path='binaries', record=self.get_binary_info(uri))
+    def add_uri(self, uri: str) -> dict[str, str | int]:
+        info = self.get_binary_info(uri)
+        self.pgrst.insert(path='binaries', record=info)
+        return info
 
     def bulk_add_uris(self, uris: Iterable[str]):
         self.pgrst.bulk_insert(
@@ -68,7 +69,7 @@ class FixityRecords:
         fixity_details = resource.check_fixity()
         logger.info(f'Fixity check outcome for {uri}: {fixity_details.outcome}')
         return {
-            'binary_uri': str(uri),
+            'uri': str(uri),
             'outcome': str(fixity_details.outcome),
             'time': fixity_details.timestamp.isoformat(),
             'size': int(str(fixity_details.size)),
