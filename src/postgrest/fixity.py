@@ -67,6 +67,7 @@ class FixityRecords:
         resource = self.repo.read(uri, BinaryResource)
         obj = resource.describe(FedoraBinary)
         fixity_details = resource.check_fixity()
+        logger.debug(f'Fixity details: {fixity_details.graph.serialize()}')
         logger.info(f'Fixity check outcome for {uri}: {fixity_details.outcome}')
         return {
             'uri': str(uri),
